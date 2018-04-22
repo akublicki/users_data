@@ -6,6 +6,11 @@ PersonDB.prototype.addPerson = function (person) {
     this.database.push(person);
 };
 
+PersonDB.prototype.removePerson = function (removeIndex) {
+    this.database.splice(removeIndex,1);
+    renderInstance.setHTML(dbInstance.database);
+};
+
 PersonDB.prototype.displayPeople = function () {
     console.log(this.database);
 };
@@ -29,15 +34,15 @@ function Render(container, button, inputName, inputSurname, inputAge, inputRole)
 Render.prototype.setHTML = function (database) {
     this.container.innerHTML = '';
     var self = this;
-    database.map(function (person) {
-        self.container.innerHTML += self.renderRow(person.name, person.surname, person.age, person.role);
+    database.map(function (person, index) {
+        self.container.innerHTML += self.renderRow(person.name, person.surname, person.age, person.role, index);
     });
 };
 
 Render.prototype.getValuesFromInput = function () {
     return {
         name: this.inputName.value,
-        surname:this.inputSurname.value,
+        surname: this.inputSurname.value,
         age: this.inputAge.value,
         role: this.inputRole.value,
     }
@@ -52,8 +57,8 @@ Render.prototype.addClick = function () {
     });
 };
 
-Render.prototype.renderRow = function (name, surname, age, role) {
-    return '<div><div>' + name + ' </div><div> ' + surname + ' </div><div> ' + age + ' </div><div> ' + role + '</div></div>';
+Render.prototype.renderRow = function (name, surname, age, role, index) {
+    return '<div><div>' + name + ' </div><div> ' + surname + ' </div><div> ' + age + ' </div><div> ' + role + '</div><button onclick="dbInstance.removePerson('+index+')">usuń</button></div>';
 };
 
 var dbInstance = new PersonDB();
