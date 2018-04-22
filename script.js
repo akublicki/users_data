@@ -1,24 +1,29 @@
-function PersonDB(){
+function PersonDB() {
     this.database = [];
 }
 
 PersonDB.prototype.addPerson = function (person) {
-   this.database.push(person);
+    this.database.push(person);
 };
 
 PersonDB.prototype.displayPeople = function () {
     console.log(this.database);
 };
 
-function Person (attributes) {
+function Person(attributes) {
     this.name = attributes.name;
     this.surname = attributes.surname;
     this.age = attributes.age;
     this.role = attributes.role;
 }
 
-function Render(attribute) {
-    this.container = document.getElementById(attribute);
+function Render(container, button, inputName, inputSurname, inputAge, inputRole) {
+    this.container = document.getElementById(container);
+    this.button = document.getElementById(button);
+    this.inputName = document.getElementById(inputName);
+    this.inputSurname = document.getElementById(inputSurname);
+    this.inputAge = document.getElementById(inputAge);
+    this.inputRole = document.getElementById(inputRole);
 }
 
 Render.prototype.setHTML = function (database) {
@@ -29,28 +34,32 @@ Render.prototype.setHTML = function (database) {
     });
 };
 
-Render.prototype.renderRow = function(name, surname, age, role) {
+Render.prototype.getValuesFromInput = function () {
+    return {
+        name: this.inputName.value,
+        surname:this.inputSurname.value,
+        age: this.inputAge.value,
+        role: this.inputRole.value,
+    }
+};
+
+Render.prototype.addClick = function () {
+    var self = this;
+    this.button.addEventListener('click', function () {
+        var person = self.getValuesFromInput();
+        dbInstance.addPerson(person);
+        renderInstance.setHTML(dbInstance.database);
+    });
+};
+
+Render.prototype.renderRow = function (name, surname, age, role) {
     return '<div><div>' + name + ' </div><div> ' + surname + ' </div><div> ' + age + ' </div><div> ' + role + '</div></div>';
 };
 
 var dbInstance = new PersonDB();
-var renderInstance = new Render('records');
+var renderInstance = new Render('records', 'addButton', 'inputName', 'inputSurname', 'inputAge', 'inputRole');
+renderInstance.addClick();
 
 renderInstance.setHTML(dbInstance.database);
 
 var button = document.getElementById('addButton');
-button.addEventListener('click', function(){
-    var inputName = document.getElementById('inputName').value;
-    var inputSurname = document.getElementById('inputSurname').value;
-    var inputAge = document.getElementById('inputAge').value;
-    var inputRole = document.getElementById('inputRole').value;
-
-    var person = new Person({
-        name: inputName,
-        surname: inputSurname,
-        age: inputAge,
-        role: inputRole
-    });
-    dbInstance.addPerson(person);
-    renderInstance.setHTML(dbInstance.database);
-});
