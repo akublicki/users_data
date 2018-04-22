@@ -7,41 +7,31 @@ function Person (attributes) {
     this.role = attributes.role;
 };
 
-var person1 = new Person({
-    name: 'John',
-    surname: 'Snow',
-    age: 25,
-    role: 'lecture',
-});
-
-var person2 = new Person({
-    name: 'Maciej',
-    surname: 'Snow',
-    age: 25,
-    role: 'lecture',
-});
-
-var person3 = new Person({
-    name: 'Kaj',
-    surname: 'Snow',
-    age: 27,
-    role: 'lecture',
-});
-
-
-peopleDB.push(person1);
-peopleDB.push(person2);
-peopleDB.push(person3);
-
 function renderRow(name, surname, age, role) {
     return '<div><div>' + name + ' </div><div> ' + surname + ' </div><div> ' + age + ' </div><div> ' + role + '</div></div>';
 }
 
 function renderDB() {
     var containerDB = document.getElementById('records');
+    containerDB.innerHTML = '';
     peopleDB.map(function (person) {
         containerDB.innerHTML += renderRow(person.name, person.surname, person.age, person.role);
     });
 }
 
-renderDB();
+var button = document.getElementById('addButton');
+button.addEventListener('click', function(){
+    var inputName = document.getElementById('inputName').value;
+    var inputSurname = document.getElementById('inputSurname').value;
+    var inputAge = document.getElementById('inputAge').value;
+    var inputRole = document.getElementById('inputRole').value;
+
+    var person = new Person({
+        name: inputName,
+        surname: inputSurname,
+        age: inputAge,
+        role: inputRole,
+    });
+    peopleDB.push(person);
+    renderDB();
+});
